@@ -113,7 +113,19 @@ public class ConnectFour {
      */
     public Location getTopOfColumn(int column) {
         // Question 1
-        // TODO
+        String columnCheck = getColumnAsString(column);
+        int len = columnCheck.length();
+        char top = 'B';
+        if( len > 0){
+            top = columnCheck.charAt(len-1);
+
+            if (top == 'B'){
+                return Location.BLACK;
+            }
+            else if (top == 'R'){
+                return Location.RED;
+            }
+        }
         
         return Location.EMPTY;
     }
@@ -128,7 +140,11 @@ public class ConnectFour {
      */
     public int getHeightOfColumn(int column) {
         // Question 2
-        // TODO
+        String columnCheck = getColumnAsString(column);
+        int len = columnCheck.length();
+        if(len > 0){
+            return len;
+        }
         
         return 0;
     }
@@ -145,6 +161,23 @@ public class ConnectFour {
      */
     public void dropToken(int column) {
         // Question 3
+        String columnString = getColumnAsString(column);
+        int len = getHeightOfColumn(column);
+        if (column <=6 && column >= 0){
+            if (len < 6){
+                if(redTurn){
+                    this.setLocation(6 - getHeightOfColumn(column) -1,column, Location.RED);
+                    redTurn = false;
+                }
+                else{
+                    this.setLocation(6-getHeightOfColumn(column) -1 ,column, Location.BLACK);
+                    redTurn = true;
+                }
+            }
+            else{
+                throw new ColumnFullException();
+            }
+        }
         // TODO
         
     }
@@ -170,6 +203,33 @@ public class ConnectFour {
         //       along a column.
         
         // TODO
+        String columnString = "";
+        for (int i =0; i < 6; i++){
+            int count =0;
+            columnString = getColumnAsString(i);
+            int len = columnString.length();
+            Location top = getTopOfColumn(i);
+            for(int p = len - 1; p >=0; p--){
+                char check = columnString.charAt(p);
+                if (top == Location.BLACK && len >= 4){
+                    if (check == 'B'){
+                        count++;
+                        if (count == 4){
+                            return Result.BLACKWIN;
+                        }
+                    }
+                }
+                else if( top == Location.RED && len >=4){
+                    if (check == 'R'){
+                        count++;
+                        if (count == 4){
+                            return Result.REDWIN;
+                        }
+                    }
+                }
+            }
+        }
+
         
         return Result.NONE;
     }
